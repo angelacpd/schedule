@@ -12,6 +12,7 @@ class Event(models.Model):
     created_date = models.DateTimeField(auto_now=True)
     # For multiple users. On delete user, delete every events.
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    location = models.TextField(max_length=100, blank=True, default='')
 
     # Force table to be called by the name you choose
     class Meta:
