@@ -23,3 +23,6 @@ class Event(models.Model):
 
     def get_event_date(self):
         return self.event_date.strftime('%d/%B/%Y %H:%M')
+
+    def get_date_input_event(self):  # This method changes datetime format to be displayed on html
+        return self.event_date.strftime('%Y-%m-%dT%H:%M')

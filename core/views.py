@@ -56,7 +56,11 @@ def event_list(request):
 
 @login_required(login_url='/login/')
 def event(request):
-    return render(request, 'event.html')
+    id_event = request.GET.get('id')
+    data = {}
+    if id_event:  # If there id_event exists
+        data['event'] = Event.objects.get(id=id_event)
+    return render(request, 'event.html', data)
 
 
 @login_required(login_url='/login/')
@@ -67,13 +71,35 @@ def submit_event(request):
         event_date = request.POST.get('event_date')
         description = request.POST.get('description')
         location = request.POST.get('location')
-        Event.objects.create(user=user,
-                             title=title,
-                             event_date=event_date,
-                             description=description,
-                             location=location)
+        event_id = request.POST.get('event_id')
+        if event_id:
+            event = Event.objects.get(id=event_id)
+            if event.user == user:
+                event.title = title
+                event.event_date = event_date
+                event.description = description
+                event.location = location
+                event.save()
+            # Event.objects.filter(id=event_id).update(title=title,
+            #                                          event_date=event_date,
+            #                                          description=description,
+            #                                          location=location)
+        else:
+            Event.objects.create(user=user,
+                                 title=title,
+                                 event_date=event_date,
+                                 description=description,
+                                 location=location)
     return redirect('/')
 
+
+@login_required(login_url='/login/')
+def delete_event(request, id_event):
+    user = request.user
+    event = Event.objects.get(id=id_event)
+    if user == event.user:
+        event.delete()
+    return redirect('/')
 
 
 # def index(request):
