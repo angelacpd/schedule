@@ -1,9 +1,10 @@
 from django.shortcuts import render, HttpResponse, redirect
 from core.models import Event
-from django.http import Http404
+from django.http.response import Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from datetime import datetime, timedelta
 
 
 # Create your views here.
@@ -36,7 +37,7 @@ def return_location(request, event_title):
     try:
         event = Event.objects.get(title=event_title)
     except:
-        raise Http404
+        raise Http404()
     else:
         if event.location == "":
             location = 'not informed.'
@@ -48,7 +49,9 @@ def return_location(request, event_title):
 @login_required(login_url='/login/')
 def event_list(request):
     user = request.user
-    event = Event.objects.filter(user=user)
+    current_date = datetime.now() - timedelta(hours=1)
+    event = Event.objects.filter(user=user, #)  #,
+                                 event_date__gt=current_date)  # suffix __gt = greater than, suffix __lt = less than
     # event = Event.objects.all()
     data = {'events': event}
     return render(request, 'schedule.html', data)
@@ -96,10 +99,22 @@ def submit_event(request):
 @login_required(login_url='/login/')
 def delete_event(request, id_event):
     user = request.user
-    event = Event.objects.get(id=id_event)
+    try:
+        event = Event.objects.get(id=id_event)
+    except:
+        raise Http404()
     if user == event.user:
         event.delete()
+    else:
+        raise Http404()
     return redirect('/')
+
+
+@login_required(login_url='/login/')
+def json_event_list(request):
+    user = request.user
+    event = Event.objects.filter(user=user).values('id', 'title')
+    return JsonResponse(list(event), safe=False)  # safe is necessary if the argument is a list, not needed for dict.
 
 
 # def index(request):

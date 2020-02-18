@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 # Create your models here.
@@ -22,7 +23,13 @@ class Event(models.Model):
         return self.title
 
     def get_event_date(self):
-        return self.event_date.strftime('%d/%B/%Y %H:%M')
+        return self.event_date.strftime('%d/%m/%Y %H:%M Hrs')
 
     def get_date_input_event(self):  # This method changes datetime format to be displayed on html
         return self.event_date.strftime('%Y-%m-%dT%H:%M')
+
+    def get_event_late(self):
+        if self.event_date < datetime.now():
+            return True
+        else:
+            return False
