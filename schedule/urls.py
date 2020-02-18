@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('events/<event_title>', views.return_location),
     path('schedule/', views.event_list),
+    path('schedule/event/', views.event),
+    path('schedule/event/submit', views.submit_event),
     path('', RedirectView.as_view(url='/schedule/')),
     path('login/', views.login_user),  # With /: GET
     path('login/submit', views.submit_login),  # Without /: POST

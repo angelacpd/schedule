@@ -44,6 +44,7 @@ def return_location(request, event_title):
             location = event.location
         return HttpResponse('Event location is: {}'.format(location))
 
+
 @login_required(login_url='/login/')
 def event_list(request):
     user = request.user
@@ -51,6 +52,28 @@ def event_list(request):
     # event = Event.objects.all()
     data = {'events': event}
     return render(request, 'schedule.html', data)
+
+
+@login_required(login_url='/login/')
+def event(request):
+    return render(request, 'event.html')
+
+
+@login_required(login_url='/login/')
+def submit_event(request):
+    if request.POST:
+        user = request.user
+        title = request.POST.get('title')
+        event_date = request.POST.get('event_date')
+        description = request.POST.get('description')
+        location = request.POST.get('location')
+        Event.objects.create(user=user,
+                             title=title,
+                             event_date=event_date,
+                             description=description,
+                             location=location)
+    return redirect('/')
+
 
 
 # def index(request):
