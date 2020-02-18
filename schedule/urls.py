@@ -23,4 +23,7 @@ urlpatterns = [
     path('events/<event_title>', views.return_location),
     path('schedule/', views.event_list),
     path('', RedirectView.as_view(url='/schedule/')),
+    path('login/', views.login_user),  # With /: GET
+    path('login/submit', views.submit_login),  # Without /: POST
+    path('logout/', views.logout_user),
 ]
