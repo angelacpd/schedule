@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Create your models here.
@@ -30,6 +30,13 @@ class Event(models.Model):
 
     def get_event_late(self):
         if self.event_date < datetime.now():
+            return True
+        else:
+            return False
+
+    def get_coming_event(self):
+        one_hour_interval = datetime.now() + timedelta(hours=1)
+        if self.event_date < one_hour_interval:
             return True
         else:
             return False

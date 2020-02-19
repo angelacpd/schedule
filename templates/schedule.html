@@ -10,6 +10,9 @@
             <li>
                 <div style={% if event.get_event_late %}
                     "color:red"
+                    {% endif %}
+                    {% if event.get_coming_event %}
+                    "color:pink"
                     {% endif %}>
                     {{ event.title }} - {{ event.get_event_date}}
                     ( <a href="event/?id={{ event.id }}">Edit</a> ) /

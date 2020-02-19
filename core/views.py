@@ -49,9 +49,10 @@ def return_location(request, event_title):
 @login_required(login_url='/login/')
 def event_list(request):
     user = request.user
-    current_date = datetime.now() - timedelta(hours=1)
-    event = Event.objects.filter(user=user, #)  #,
-                                 event_date__gt=current_date)  # suffix __gt = greater than, suffix __lt = less than
+    # current_date = datetime.now()
+    # coming_event = datetime.now() - timedelta(hours=1)
+    event = Event.objects.filter(user=user)
+    # event_date__gt=current_date)  # suffix __gt = greater than, suffix __lt = less than
     # event = Event.objects.all()
     data = {'events': event}
     return render(request, 'schedule.html', data)
